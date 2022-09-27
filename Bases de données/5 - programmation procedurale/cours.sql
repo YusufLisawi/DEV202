@@ -179,8 +179,172 @@ delimiter ;
 
 select get_phone_type("0321548754");
 
+#exemple equation premier degrès
+#ax+b=0
+
+#a=0 et b=0   x=R
+#a=0 et b!=0   x=impossible
+#a!=0  x=-b/a
+
+drop function if exists eq1d;
+delimiter $
+create function eq1d(a int,b int)
+returns varchar(50)
+no sql  #deterministic
+begin
+    declare solution varchar(50);
+    if (a=0 and b=0) then
+		set solution = concat("la solution est toute valeur de l'ensemble R" );
+	else
+		if (a=0 and b!=0) then
+			set solution = concat("la solution est impossible" );
+       else
+			set solution = concat("la solution est x=" , round(-b/a,2));
+        end if;
+	end if;
+    return(solution);
+end $
+delimiter ;
+
+
+
+
+drop function if exists eq1d;
+delimiter $
+create function eq1d(a int,b int)
+returns varchar(50)
+no sql  #deterministic
+begin
+    declare solution varchar(50);
+   
+	if a=0 then
+		if b=0 then
+			set solution = concat("la solution est toute valeur de l'ensemble R" );
+	    else
+			set solution = concat("la solution est impossible" );
+		end if;
+	else
+		set solution = concat("la solution est x=" , round(-b/a,2));
+	end if;
+    return(solution);
+end $
+delimiter ;
+
+select eq1d(1,0) addition;
+
+#equation 2ème degrès
+# ax²+bx+c=0
+# a=0 b=0 c=0   => R
+# a=0 b=0 c!=0  => impossible
+# a=0 b!=0 => x=-c/b
+# a!=0
+#	delta = b²-4ac
+#    delta<0 => impossible
+#    delta=0 => x1=x2=-b/2a
+#    delta>0  x1=-b-racine(delta)/2a  x2=-b+racine(delta)/2a
+
+
+drop function if exists eq2d;
+delimiter $
+create function eq2d(a int, b int, c int )
+returns varchar(50)
+deterministic
+begin
+	declare result varchar(50);
+    declare delta float ;
+    
+    if a=0 then
+		if b=0 then
+			if c=0 then
+               set result="R";
+            else
+                set result="impossible";
+            end if;
+        else
+           set result = concat("x=",round(-c/b,2));
+        end if;
+    else
+      #delta
+		set delta =  (b*b)-(4*a*c);
+		 case 
+         when delta<0 then  
+				set result = "impossible dans R";
+         when delta=0 then 
+				set result = concat("x1=x2=",round(-b/(2*a),2));
+         else 
+				set result = concat("x1=",round(-b+sqrt(delta)/(2*a),2),"    x2=",round(-b-sqrt(delta)/(2*a),2));
+         end case;
+    end if;
+    
+	return result;
+end $
+delimiter ;
+
+select eq2d(2,6,2);
+
+
+
+
+
+
+
 
 		#case
+    
+    
+drop function if exists get_mention;
+delimiter $
+create function get_mention(note float)
+returns varchar(20)
+no sql
+deterministic
+begin
+	declare mention varchar(20);
+	case
+		when note>18 then set mention="excellent";
+		when note>14 then set mention="très bien";
+		when note>12 then set mention="bien";
+		when note>10 then set mention="passable";
+        
+		when note>8 then set mention="faible";
+     	when note>5 then set mention="insuffisant";       
+		else	set mention="très insuffisant";
+   end case;
+    return mention;
+ end $
+select get_mention(3.5);
+
+#case variable when
+
+
+drop function if exists get_day_of_week;
+delimiter $
+create function get_day_of_week(day int)
+returns varchar(10)
+no sql
+deterministic
+begin
+	declare name_of_day varchar(20);
+	case day
+		when 1 then set name_of_day="Dimanche";
+		when 2 then set name_of_day="Lundi";
+		when 3 then set name_of_day="Mardi";
+		when 4 then set name_of_day="Mercredi";
+		when 5 then set name_of_day="Jeudi";
+     	when 6 then set name_of_day="Vendredi";       
+     	when 7 then set name_of_day="Samedi";   
+		else	set name_of_day="Erreur";
+   end case;
+    return name_of_day;
+ end $
+delimiter ;
+select get_day_of_week(2);
+
+        
+        
+        
+        
+        
 	#les boucles
 		#while
 		#repeat ... until
