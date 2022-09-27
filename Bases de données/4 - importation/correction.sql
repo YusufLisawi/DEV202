@@ -1,6 +1,6 @@
-/*drop database if exists notes;
+drop database if exists notes;
 create database if not exists notes collate utf8_general_ci;
-use notes;*/
+use notes;
 
 select * from etudiants;
 
