@@ -341,14 +341,89 @@ delimiter ;
 select get_day_of_week(2);
 
         
-        
-        
-        
-        
 	#les boucles
 		#while
+use notes;
+
+drop function if exists somme;
+delimiter $$
+create function somme (n int)
+returns bigint
+deterministic
+#no sql
+#reads sql data
+begin
+	declare s int default 0;
+    declare i int default 1;
+    while i<=n do
+		set s = s+i;
+        set i=i+1; 
+    end while;
+	return s;
+end$$
+delimiter ;
+
+  select somme(4) as somme;      
+        
 		#repeat ... until
-		#loop
+
+drop function if exists somme;
+delimiter $$
+create function somme (n int)
+returns bigint
+deterministic
+#no sql
+#reads sql data
+begin
+	declare s int default 0;
+    declare i int default 1;
+    repeat
+		set s = s+i;
+        set i=i+1; 
+    until i>n end repeat ;
+	return s;
+end$$
+delimiter ;
+
+  select somme(4) as somme;      
+
+	
+        
+        #loop
+
+
+drop function if exists somme;
+delimiter $$
+create function somme (n int)
+returns bigint
+deterministic
+#no sql
+#reads sql data
+begin
+	declare s int default 0;
+    declare i int default 1;
+    label1: loop
+		set s = s+i;
+        set i=i+1; 
+        if i<=n then
+			iterate label1   ;
+        end if;
+        leave label1;
+    end loop label1;
+	return s;
+end$$
+delimiter ;
+
+select somme(5) as somme;      
+
+
+
+
+
+
+
+
+
 
 #les fonctions
 
