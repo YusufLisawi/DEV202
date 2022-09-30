@@ -418,6 +418,98 @@ select somme(5) as somme;
 
 
 
+#factoriel
+ 
+drop function if exists factoriel;
+delimiter $$
+create function factoriel(n int)
+    returns varchar(50)
+    deterministic
+begin
+		declare i int default 1;
+        declare result bigint default 1;	
+		if n<0 then
+			return "impossible";
+		end if;
+
+        repeat
+			set result=result*i;
+            set i=i+1;
+        until i>n end repeat;
+		return result;
+end $$
+delimiter ;
+select factoriel(0)  ;
+    
+#fonction recursive
+
+
+ drop function if exists factoriel;
+    delimiter $$
+    create function factoriel(n int)
+    returns bigint
+    deterministic
+    begin
+        declare result bigint default 1;
+		if (n>2) then 
+			set result = n * factoriel(n-1);
+        end if;
+		return result;
+    end $$
+    delimiter ;
+
+   select factoriel(5)  ;
+
+
+
+
+
+drop procedure if exists ps_somme;
+
+delimiter $$
+create procedure ps_somme(in a int, in b int, out s int, out m int)
+begin
+	#set s=a+b;
+	select a + b into s;
+    select a * b into m;
+    
+end$$
+delimiter ;
+
+set @s=0;
+set @m=0;
+call  ps_somme(3,5, @s,@m);
+select @s;
+select @m;
+
+
+
+    
+    #procedure recursive
+
+ drop procedure if exists ps_factoriel;
+    delimiter $$
+    create procedure ps_factoriel(inout n bigint)
+    begin
+        declare result bigint default 1;
+        declare x bigint default 1;
+		if n>2 then
+            set x=n-1;
+		    call ps_factoriel(x);
+		end if;
+		set n =  n*x;
+    end $$
+    delimiter ;
+    
+    set max_sp_recursion_depth = 20;
+    
+    
+    
+    set @n = 13;
+	call ps_factoriel(@n)  ;
+    select @n;  
+    
+    #loop
 
 
 
