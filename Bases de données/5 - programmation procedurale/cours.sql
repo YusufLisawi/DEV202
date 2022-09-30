@@ -484,6 +484,14 @@ select @m;
 
 
 
+31/09/2002
+
+31 septembre 2002
+
+select month(current_date)
+select date_format(current_date,"%Y")
+    
+select timestampdiff(month,current_date ,"2022/12/31 23:59:59")    
     
     #procedure recursive
 
@@ -505,7 +513,7 @@ select @m;
     
     
     
-    set @n = 13;
+    set @n = 3;
 	call ps_factoriel(@n)  ;
     select @n;  
     
@@ -518,5 +526,24 @@ select @m;
 
 
 #les fonctions
+
+
+
+ drop function if exists get_nb_stag;
+    delimiter $$
+    create function get_nb_stag()
+    returns bigint
+    deterministic
+    begin
+        declare nb bigint;
+		#select count(*) into nb from stagiaire;
+        set nb= (select count(*)  from stagiaire);
+		return nb;
+    end $$
+    delimiter ;
+
+   select get_nb_stag()  ;
+
+
 
 #les procedures
