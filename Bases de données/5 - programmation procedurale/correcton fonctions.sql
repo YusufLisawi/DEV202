@@ -8,10 +8,15 @@ create function get_time_diff(intervalle varchar(20),d1 datetime, d2 datetime)
 begin
 	declare resultat varchar(50);
 	case intervalle
-		when "annee" then set resultat= timestampdiff(year,d1,d2);
+		when "annee" then 
+        begin
+			set resultat= timestampdiff(year,d1,d2);
+			set resultat = 0;
+        end;
 		when "mois" then set resultat= timestampdiff(month,d1,d2);
-		when "jour" then set resultat= timestampdiff(day,d1,d2);
-		when "heure" then set resultat= timestampdiff(hour,d1,d2);
+		when "jour" then 
+       
+        when "heure" then set resultat= timestampdiff(hour,d1,d2);
 		when "minute" then set resultat= timestampdiff(minute,d1,d2);
 		when "seconde" then set resultat= timestampdiff(second,d1,d2);
 		else
@@ -21,7 +26,7 @@ begin
 end$$
 delimiter ;
 
-select get_time_diff("seconde",current_time, "2022/12/31 23:59:59");
+select get_time_diff("annee",current_time, "2022/12/31 23:59:59");
 
 select timestampdiff(second,current_time,"2022/12/31 23:59:59");
 
@@ -92,6 +97,60 @@ return r;
 end$$
 delimiter ;
 
-select get_nb_pilotes(3)
+select get_nb_pilotes(3);
+
+
+
+drop function if exists get_duree_pilote;
+delimiter $$
+create function get_duree_pilote(nump int)
+returns int
+deterministic
+begin
+	declare r int;
+   select timestampdiff(day, datedebut, current_date) into r  from pilote where numpilote=nump ;
+    
+	return r;
+end$$
+delimiter ;
+
+select get_duree_pilote(1);
+
+
+
+create database employes COLLATE "utf8_general_ci";
+use employes;
+
+
+create table DEPARTEMENT (
+ID_DEP int auto_increment primary key, 
+NOM_DEP varchar(50), 
+Ville varchar(50));
+
+create table EMPLOYE (
+ID_EMP int auto_increment primary key, 
+NOM_EMP varchar(50), 
+PRENOM_EMP varchar(50), 
+DATE_NAIS_EMP date, 
+SALAIRE float,
+ID_DEP int ,
+constraint fkEmployeDepartement foreign key (ID_DEP) references DEPARTEMENT(ID_DEP));
+
+insert into DEPARTEMENT (nom_dep, ville) values ('FINANCIER','Tanger'),
+('Informatique','Tétouan'),
+('Marketing','Martil'),
+('GRH','Mdiq');
+
+insert into EMPLOYE (NOM_EMP , PRENOM_EMP , DATE_NAIS_EMP , SALAIRE ,ID_DEP ) values 
+('said','said','1990/1/1',8000,1),
+('hassan','hassan','1990/1/1',8500,1),
+('khalid','khalid','1990/1/1',7000,2),
+('souad','souad','1990/1/1',6500,2),
+('Farida','Farida','1990/1/1',5000,3),
+('Amal','Amal','1990/1/1',6000,4),
+('Mohamed','Mohamed','1990/1/1',7000,4);
+
+select * from employe
+
 
 
