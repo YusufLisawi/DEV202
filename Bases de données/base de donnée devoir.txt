@@ -1,0 +1,72 @@
+create database projects2;
+go
+use projects2;
+go;
+
+create table Division (IdDivision int identity primary key, nomDivision varchar(50))
+
+create table Service (IdService int identity primary key, nomService varchar(50), IdDvision int foreign key references division(idDivision))
+
+create table Employe (Mle int identity primary key, Nom varchar(50),  Prenom varchar(50), dateRecrutement date, salaire money, idService int foreign key references service(idService) )
+
+create table Projet (idProjet int identity primary key, titreProjet varchar(50))
+
+create table Tache (idTache int identity primary key, descriptionTache text, idProjet int  foreign key references projet(idProjet))
+
+create table Realise (Mle int  foreign key references employe(Mle), idTache int  foreign key references tache(idTache), dateDebut date, dateFin date, constraint pkRealise primary key (Mle, idTache, dateDebut))
+
+select * from division
+insert into division values ('formation'),
+						    ('drh'),
+							('it')
+
+insert into service values ('formation continue',1),
+							('stages',1),
+							('recrutement',2),
+							('action sociale',2),
+							('developpement',3),
+							('maintenance',3)
+
+insert into employe values ('said','said','1/1/2000',5000,1),
+						   ('kamal','kamal','1/1/2000',1000,1),	
+						   ('zakaria','zakaria','1/1/2000',10000,2),
+						   ('mohamed','mohamed','1/1/2000',3000,2),
+						   ('ahmed','ahmed','1/1/2000',8000,3),
+						   ('Ali','Ali','1/1/2000',2500,3),
+						   ('Adil','Adil','1/1/2000',4000,4),
+						   ('Najib','Najib','1/1/2000',9000,4),
+						   ('zaid','zaid','1/1/2000',12000,5),
+						   ('fatima','fatima','1/1/2000',4000,5),
+						   ('meriam','meriam','1/1/2000',3000,6),
+						   ('souad','souad','1/1/2000',14000,6)
+
+						  
+insert into projet values ('Project A'),('Project B'),('Project C')
+
+
+
+insert into tache values ('Tache A1',1),
+						 ('Tache B1',2),
+	   					 ('Tache B2',2),
+						 ('Tache C1',3),
+						 ('Tache C2',3),
+						 ('Tache C3',3)
+
+insert into realise values (1,4,'10/2/2000','13/2/2000'),
+ (1,4,'13/2/2000','13/2/2000'),
+  (2,3,'12/2/2000','13/2/2000'),
+   (4,3,'11/2/2000','13/2/2000'),
+    (1,2,'13/1/2000','13/2/2000'),
+	 (3,1,'10/2/2000','13/2/2000'),
+	  (5,4,'3/2/2000','13/2/2000'),
+	   (10,1,'13/2/2000','13/2/2000'),
+	    (1,2,'12/2/2000','13/2/2000'),
+		 (3,2,'11/2/2000','13/2/2000'),
+		  (2,3,'14/2/2000','18/2/2000'),
+		   (4,4,'10/2/2000','13/2/2000'),
+		    (8,4,'11/2/2000','13/2/2000'),
+    (9,3,'3/2/2000','13/2/2000'),
+    (11,1,'2/2/2000','13/2/2000'),
+    (12,1,'3/1/2000','13/2/2000'),
+    (11,2,'13/1/2000','11/2/2000'),
+    (1,3,'9/2/2000','13/2/2000')
