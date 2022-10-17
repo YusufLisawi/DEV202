@@ -3,6 +3,7 @@ select * from vol;
 delete from vol;
 
 select * from pilote;
+set sql_safe_updates = 0;
 
 declare
 open
