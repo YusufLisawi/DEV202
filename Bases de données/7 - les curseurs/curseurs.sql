@@ -5,13 +5,10 @@ delete from vol;
 select * from pilote;
 set sql_safe_updates = 0;
 
-declare
-open
-
-
-fetch
-
-close
+#declare
+#open
+#fetch
+#close
 
 
 drop procedure if exists insert_vols;
