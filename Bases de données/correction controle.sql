@@ -2,14 +2,45 @@ drop database if exists gestionProjets;
 create database gestionProjets collate utf8_general_ci;
 use gestionProjets;
 
-create table Division (IdDivision int auto_increment primary key, nomDivision varchar(50));
-create table Service (IdService int auto_increment primary key, nomService varchar(50), IdDivision int, foreign key (idDivision) references division(IdDivision) );
-create table Employe (Mle int auto_increment primary key, Nom varchar(50),  Prenom varchar(50), dateRecrutement date, salaire float, idService int, foreign key (idService) references Service(idService) );
-create table Projet (idProjet int auto_increment primary key, titreProjet varchar(50));
-create table Tache (idTache int auto_increment primary key, descriptionTache text, idProjet int, foreign key (idProjet) references Projet(idProjet)  );
-create table Realise (Mle int, idTache int, dateDebut date, dateFin date, foreign key (Mle) references Employe(Mle)  , foreign key (idTache) references Tache(idTache), primary key (Mle,idTache, dateDebut)  );
+create table Division (
+IdDivision int auto_increment primary key, 
+nomDivision varchar(50));
 
-insert into division values 
+create table Service (
+IdService int auto_increment primary key, 
+nomService varchar(50), 
+IdDivision int, 
+foreign key (idDivision) references division(IdDivision) );
+
+create table Employe (
+Mle int auto_increment primary key, 
+Nom varchar(50),  
+Prenom varchar(50), 
+dateRecrutement date, 
+salaire float, 
+idService int, 
+foreign key (idService) references Service(idService) );
+
+create table Projet (
+idProjet int auto_increment primary key, 
+titreProjet varchar(50));
+
+create table Tache (
+idTache int auto_increment primary key, 
+descriptionTache text, 
+idProjet int, 
+foreign key (idProjet) references Projet(idProjet)  );
+
+create table Realise (
+Mle int, 
+idTache int, 
+dateDebut date, 
+dateFin date, 
+foreign key (Mle) references Employe(Mle)  , 
+foreign key (idTache) references Tache(idTache), 
+primary key (Mle,idTache, dateDebut)  );
+
+insert into division () values 
 (1,'informatique'),(2,'commercial'),(3,'marketing');
 
 insert into service values 
@@ -41,8 +72,8 @@ insert into realise values
 
 create view q1 as
 	(select e.* 
-	from employe  einner join service s on e.idService = s.idService 
-	where idDivision = 1 );
+	from employe  e inner join service s on e.idService = s.idService 
+	where idDivision = 3 );
     
 select * from q1;
 
@@ -50,35 +81,36 @@ select * from q1;
 #2.	Ecrire une vue qui affiche le(les) employé(s) qui a(ont) le
 # plus grand nombre de tâches (2 pts)
 
-insert into realise values (1,1,'2022/11/15','2022/11/16');
+insert into realise values (3,1,'2022/11/15','2022/11/16');
 
-with t1 as (select  distinct  e.mle, idTache 
-from employe e inner join realise r on e.mle = r.mle),
+select * from realise
+create view v3 as
+with t1 as (select  distinct  mle, idTache 
+from  realise  ),
 t2 as (select count(idTache) nb, mle from t1 group by mle),
 t3 as(select max(nb) maxnb from t2)
 
 select e.mle, nom,prenom 
 from employe e  inner join t1 on t1.mle = e.mle , t3
-group by e.mle, nom, prenom,  maxnb
+group by e.mle, nom, prenom, maxnb
 having count(idTache)  = maxnb
 
-Methode 2
-
+#Methode 2
+create view v3 as
 select e.mle,nom,prenom , count(idTache) nb from 
 employe e inner join
-	(select  distinct  e.mle, idTache 
-	from employe e inner join realise r on e.mle = r.mle) t4
-on e.mle = t4.mle
-
+	(select  distinct  mle, idTache 
+	from realise ) t4
+	on e.mle = t4.mle
 	group by e.mle, nom, prenom 
     having count(idTache) in 
             (
-select max(nb) max from 
-		(select mle, count(idTache) nb from 
-			(select  distinct  e.mle, idTache 
-			from employe e inner join realise r on e.mle = r.mle) t1
-		 group by mle) t2
-) 
+				select max(nb) max from 
+						(select mle, count(idTache) nb from 
+							(select  distinct  mle, idTache 
+							 realise r) t1
+						 group by mle) t2
+			) 
 
 #3.	Ecrire une fonction qui reçoit le numéro d’un
 # employé et qui retourne la durée totale de ces tâches (2pts)
@@ -100,7 +132,10 @@ select * from realise;
 
 #4.	Ecrire une procedure qui affiche la liste des tâches qui se trouvent dans le
 # projet numéro 3 (2 pts)
-
+create procedure  p4()
+begin
+	select * from tache where projet_id=3;
+end$$
 
 
 
@@ -158,7 +193,9 @@ select * from service;
 call q10;
 #11.	Ajouter une contrainte qui  ne permet pas au salaire de dépasser 20000 dh,
 
-alter table employe add check (salaire <=20000);
+
+
+alter table employe add check (salaire <=30000);
 
 #12.	Ajouter un curseur qui parcours la liste de tous les employés et qui augmente 
 #leurs salaires de 30%. Si l’un des salaires dépasse 20000 dh toutes les modifications
