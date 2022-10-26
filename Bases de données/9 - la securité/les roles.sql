@@ -1,7 +1,15 @@
+
+drop user if exists u1@localhost;
+drop user if exists u2@localhost;
+drop user if exists u3@localhost;
+
+
 create user 'u1'@'localhost' identified by '1234567';
 create user 'u2'@'localhost' identified by '1234567';
 create user 'u3'@'localhost' identified by '1234567';
 
+drop role if exists lecture@localhost;
+drop role if exists edition@localhost;
 
 CREATE ROLE lecture@localhost;
 CREATE ROLE edition@localhost;
@@ -24,5 +32,8 @@ SET DEFAULT ROLE  ALL TO u2@localhost;
 SET DEFAULT ROLE  ALL TO u3@localhost;
 
 show grants 
-for u1@localhost
-using edition@localhost, lecture@localhost;
+for u2@localhost
+using  lecture@localhost;
+
+set password  for u1@localhost = 'abcdefg'
+
