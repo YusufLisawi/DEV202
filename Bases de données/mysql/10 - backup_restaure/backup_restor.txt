@@ -1,0 +1,24 @@
+La sauvegarde et la resaturation
+backup/restor
+
+backup
+---------
+mysqldump  -h localhost   -P 3308  -u root -p   ecole > d:\saveecole3.sql
+
+
+restauration
+methode 1
+-------------
+mysql  -h localhost   -P 3308  -u root -p 
+inter your password: 123456
+mysql>create database ecole4 collate utf8_general_ci;
+mysql>use ecole4;
+mysql>source d:\saveecole3.sql;
+
+
+methode 2 
+mysql  -h localhost   -P 3308  -u root -p   ecole7 < d:\saveecole3.sql
+
+
+
+
