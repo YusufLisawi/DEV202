@@ -1,3 +1,6 @@
+sujets des exposés
+-------------------
+
 1 - utilisation et installation de mongodbcompass et mongoshell
 2 - les commandes find et aggregate de mongodb
 3 - la mise a jour des données avec mongo db insert, update et delete
